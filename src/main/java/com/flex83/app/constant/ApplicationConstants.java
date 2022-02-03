@@ -10,8 +10,6 @@ public final class ApplicationConstants {
     public static final String COMMA_STRING = ",";
     public static final String SLASH_STRING = "/";
     public static final String COLON_STRING = ":";
-    public static final int DESC = -1;
-    public static final int ASC = 1;
     public static final int ONE = 1;
     public static final int ZERO = 0;
     public static final String DATABASE = "__DATABASE__";
