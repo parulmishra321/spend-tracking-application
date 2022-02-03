@@ -14,24 +14,24 @@ import java.util.Objects;
 public class GenerateUtils<T, U> {
     private static final Logger LOG = LogManager.getLogger();
 
-    public U generateFrom(T request, U data) {
-        CommonUtils.setCreateEntityFields(data);
-        return updateFrom(request, data);
+    public U generateFrom(T source, U target) {
+        CommonUtils.setCreateEntityFields(target);
+        return updateFrom(source, target);
     }
 
-    public U updateFrom(T request, U data) {
-        Field[] requestFields = request.getClass().getDeclaredFields();
+    public U updateFrom(T source, U target) {
+        Field[] requestFields = source.getClass().getDeclaredFields();
         for (Field field : requestFields) {
             if (!field.getAnnotatedType().isAnnotationPresent(DocumentIgnore.class)) {
                 try {
                     field.setAccessible(true);
-                    if (Objects.nonNull(field.get(request))) {
-                        if (data.getClass().isAssignableFrom(Document.class) || data.getClass().isAssignableFrom(Map.class)) {
-                            ((Document) data).put(field.getName(), field.get(request));
+                    if (Objects.nonNull(field.get(source))) {
+                        if (target.getClass().isAssignableFrom(Document.class) || target.getClass().isAssignableFrom(Map.class)) {
+                            ((Document) target).put(field.getName(), field.get(source));
                         } else {
-                            Field dataField = data.getClass().getDeclaredField(field.getName());
+                            Field dataField = target.getClass().getDeclaredField(field.getName());
                             dataField.setAccessible(true);
-                            dataField.set(data, field.get(request));
+                            dataField.set(target, field.get(source));
                         }
                     }
 
@@ -42,6 +42,6 @@ public class GenerateUtils<T, U> {
                 }
             }
         }
-        return data;
+        return target;
     }
 }
