@@ -49,6 +49,7 @@ public class GroupsController {
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
+
     @GetMapping
     public ResponseDTO<?> getAllGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant) throws Exception {
         return responseUtil.ok(groupsService.getAllGroups(), ApiResponseCode.SUCCESS);
@@ -61,10 +62,12 @@ public class GroupsController {
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
+
     @GetMapping("/{id}")
-    public ResponseDTO<?> getById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@PathVariable("id") String id) throws Exception {
+    public ResponseDTO<?> getById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "groupId",required = true) @PathVariable("id") String id) throws Exception {
         return responseUtil.ok(groupsService.getById(id), ApiResponseCode.SUCCESS);
     }
+
     @ApiOperation(value = "Delete by id")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = ApiResponseDTO.class),
@@ -78,6 +81,7 @@ public class GroupsController {
         groupsService.deleteById(id);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
+
     @ApiOperation(value = "update by id")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = ApiResponseDTO.class),
@@ -87,9 +91,8 @@ public class GroupsController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
     @PutMapping("/{id}")
-    public ResponseDTO<?> update(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@RequestBody GroupCreateRequest groupCreateRequest,@PathVariable("id") String id) throws Exception {
-
-        groupsService.updateDocument(groupCreateRequest,id);
+    public ResponseDTO<?> updateById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "groupCreateRequest",required = true) @RequestBody GroupCreateRequest groupCreateRequest,@ApiParam(value = "id",required = true) @PathVariable("id") String id) throws Exception {
+        groupsService.updateById(groupCreateRequest,id);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
 }

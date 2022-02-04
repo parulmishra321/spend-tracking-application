@@ -20,6 +20,7 @@ public interface MongoDBService {
     public Document findOne(String collection, Document query, Document projection, Document sort);
 
     Document findOne(String collectionName, Document query, Document projection);
+    Document findById(String collection, String id, Document projection);
 
     Document findOne(String collection, Document query, Document projection, String sortBy, Integer sortType);
 

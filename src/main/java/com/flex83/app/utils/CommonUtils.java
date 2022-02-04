@@ -6,7 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+
+import static jdk.internal.joptsimple.internal.Strings.isNullOrEmpty;
 
 public final class CommonUtils {
     private static final Logger LOG = LogManager.getLogger();
@@ -28,6 +32,8 @@ public final class CommonUtils {
             entity.setUpdatedAt(new Date());
         }
     }
+
+
 
 
 }
