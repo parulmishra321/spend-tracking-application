@@ -1,7 +1,6 @@
 package com.flex83.app.bussiness;
-
-import com.flex83.app.entities.TenantDatabaseConfig;
 import com.flex83.app.exception.ValidationException;
+import com.flex83.app.repository.TenantDatabaseConfigRepository;
 import com.flex83.app.request.GroupCreateRequest;
 import com.flex83.app.response.GroupDetails;
 import com.flex83.app.services.MongoDBService;
@@ -27,23 +26,27 @@ public class GroupsService {
     private GenerateUtils generateUtils;
 
     public void createGroups(GroupCreateRequest groupCreateRequest) {
+        Document query=new Document();
         Document groupDetails = new Document();
         groupDetails.put("id", CommonUtils.generateUUID());
+        Document projection = new Document();
+        projection.put(_ID, 0);
+        List<Document> result = mongoDBService.findList(GROUPS_COLLECTION,query, projection);
+        for (Document document: result) {
+            if(document.getString("name").equalsIgnoreCase(groupCreateRequest.getName())){
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Group name already exists with this name");
+            }
+        }
         generateUtils.generateFrom(groupCreateRequest, groupDetails);
         mongoDBService.create(GROUPS_COLLECTION, groupDetails);
     }
 
-    public List<GroupDetails> getAllGroups() {
-        List<GroupDetails> response = new ArrayList<>();
+    public List<Document> getAllGroups() {
         Document query = new Document();
         Document projection = new Document();
         projection.put(_ID, 0);
-        List<Document> result = mongoDBService.findList(GROUPS_COLLECTION, query, projection);
-        result.forEach(element -> {
-            GroupDetails groupDetails = new GroupDetails();
-            response.add((GroupDetails) generateUtils.generateFrom(element, groupDetails));
-        });
-        return response;
+        List<Document> result = (List<Document>) mongoDBService.findList(GROUPS_COLLECTION, query, projection);
+        return result;
     }
 
     public Document getById(String id) {
@@ -71,9 +74,11 @@ public class GroupsService {
     }
 
     public void updateById(GroupCreateRequest groupCreateRequest, String id) {
+        Document query=new Document();
+        query.put("id",id);
         Document projection = new Document();
         projection.put(_ID, 0);
-        Document result = mongoDBService.findById(GROUPS_COLLECTION, id, projection);
+        Document result = mongoDBService.findOne(GROUPS_COLLECTION, query, projection);
         if (Objects.isNull(result) || result.isEmpty()) {
             throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "group details does not exists");
         }

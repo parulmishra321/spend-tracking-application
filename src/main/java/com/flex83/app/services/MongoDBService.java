@@ -20,7 +20,6 @@ public interface MongoDBService {
     public Document findOne(String collection, Document query, Document projection, Document sort);
 
     Document findOne(String collectionName, Document query, Document projection);
-    Document findById(String collection, String id, Document projection);
 
     Document findOne(String collection, Document query, Document projection, String sortBy, Integer sortType);
 
@@ -41,5 +40,6 @@ public interface MongoDBService {
     List<String> getAllCollections();
 
     void deleteOne(String collectionName, Document query);
+
     void deleteMany(String collectionName, Document query);
 }

@@ -26,9 +26,9 @@ public class GroupsController {
     @Autowired
     private GroupsService groupsService;
 
-    @ApiOperation(value = "Create groups")
+    @ApiOperation(value = "Create Groups")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = ApiResponseDTO.class),
+            @ApiResponse(code = 201, message = "C reated", response = ApiResponseDTO.class),
             @ApiResponse(code = 400, message = "Bad Request", response = BadRequestResponseDTO.class),
             @ApiResponse(code = 401, message = "You are Not Authenticated", response = NotAuthenticatedResponseDTO.class),
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
@@ -36,7 +36,7 @@ public class GroupsController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @RequestBody GroupCreateRequest groupCreateRequest) throws Exception {
+    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody GroupCreateRequest groupCreateRequest) throws Exception {
         groupsService.createGroups(groupCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
@@ -64,7 +64,7 @@ public class GroupsController {
     })
 
     @GetMapping("/{id}")
-    public ResponseDTO<?> getById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "groupId",required = true) @PathVariable("id") String id) throws Exception {
+    public ResponseDTO<?> getById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "groupId", required = true) @PathVariable("id") String id) throws Exception {
         return responseUtil.ok(groupsService.getById(id), ApiResponseCode.SUCCESS);
     }
 
@@ -77,12 +77,12 @@ public class GroupsController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
    @DeleteMapping("/{id}")
-    public ResponseDTO<?> deleteById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@PathVariable("id") String id) throws Exception {
+    public ResponseDTO<?> deleteById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "Delete by id") @PathVariable("id") String id) throws Exception {
         groupsService.deleteById(id);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
 
-    @ApiOperation(value = "update by id")
+    @ApiOperation(value = "Update by id")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = ApiResponseDTO.class),
             @ApiResponse(code = 400, message = "Bad Request", response = BadRequestResponseDTO.class),
@@ -91,8 +91,8 @@ public class GroupsController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
     @PutMapping("/{id}")
-    public ResponseDTO<?> updateById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "groupCreateRequest",required = true) @RequestBody GroupCreateRequest groupCreateRequest,@ApiParam(value = "id",required = true) @PathVariable("id") String id) throws Exception {
-        groupsService.updateById(groupCreateRequest,id);
+    public ResponseDTO<?> updateById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody GroupCreateRequest groupCreateRequest,@ApiParam(value = "id",required = true) @PathVariable("id") String id) throws Exception {
+        groupsService.updateById(groupCreateRequest, id);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
 }
