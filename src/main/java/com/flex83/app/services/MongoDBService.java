@@ -40,5 +40,6 @@ public interface MongoDBService {
     List<String> getAllCollections();
 
     void deleteOne(String collectionName, Document query);
+
     void deleteMany(String collectionName, Document query);
 }

@@ -1,13 +1,17 @@
-package com.flex83.app.request;
+package com.flex83.app.response;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
-public class GroupCreateRequest {
-    @NotBlank(message = "pattern.ConnectorReq.name")
-    @Pattern(regexp="^[a-zA-Z0-9]([\\w]*[a-zA-Z0-9]?$)",message="pattern.ConnectorReq.name")
+public class GroupDetails {
+    private String id;
     private String name;
     private String description;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
