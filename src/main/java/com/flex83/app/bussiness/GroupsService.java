@@ -11,11 +11,9 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import static com.flex83.app.constant.MongoDBConstants.*;
 
 @Service
@@ -27,26 +25,33 @@ public class GroupsService {
 
     public void createGroups(GroupCreateRequest groupCreateRequest) {
         Document query=new Document();
+        query.put("name",groupCreateRequest.getName());
         Document groupDetails = new Document();
         groupDetails.put("id", CommonUtils.generateUUID());
         Document projection = new Document();
         projection.put(_ID, 0);
-        List<Document> result = mongoDBService.findList(GROUPS_COLLECTION,query, projection);
-        for (Document document: result) {
-            if(document.getString("name").equalsIgnoreCase(groupCreateRequest.getName())){
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Group name already exists with this name");
-            }
+        Document result = mongoDBService.findOne(GROUPS_COLLECTION,query, projection);
+        if (Objects.nonNull(result) && !result.isEmpty()) {
+            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "group details already exists with this name" + groupCreateRequest.getName());
         }
         generateUtils.generateFrom(groupCreateRequest, groupDetails);
         mongoDBService.create(GROUPS_COLLECTION, groupDetails);
     }
 
-    public List<Document> getAllGroups() {
+    public List<GroupDetails> getAllGroups() {
+        List<GroupDetails> response = new ArrayList<>();
         Document query = new Document();
         Document projection = new Document();
         projection.put(_ID, 0);
-        List<Document> result = (List<Document>) mongoDBService.findList(GROUPS_COLLECTION, query, projection);
-        return result;
+        List<Document> result = mongoDBService.findList(GROUPS_COLLECTION, query, projection);
+        result.forEach(element -> {
+            GroupDetails groupDetails = new GroupDetails();
+            groupDetails.setId(element.getString("id"));
+            groupDetails.setName(element.getString("name"));
+            groupDetails.setDescription(element.getString("description"));
+            response.add(groupDetails);
+        });
+        return response;
     }
 
     public Document getById(String id) {
