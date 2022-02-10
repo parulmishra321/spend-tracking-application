@@ -1,5 +1,7 @@
 package com.flex83.app.request;
 
+import com.sun.xml.bind.v2.schemagen.xmlschema.Schema;
+
 public class PublishAcl {
     private String id;
     private String topic;

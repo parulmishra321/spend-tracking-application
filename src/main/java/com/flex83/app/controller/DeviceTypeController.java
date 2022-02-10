@@ -35,7 +35,7 @@ public class DeviceTypeController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<?> createDeviceType(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @RequestBody DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
+    public ResponseDTO<?> createDeviceType(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant,@ApiParam(value = "deviceTypeCreateRequest", required = true) @RequestBody DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
         deviceTypeServices.createDeviceType(deviceTypeCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
