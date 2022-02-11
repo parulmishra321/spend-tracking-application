@@ -5,6 +5,7 @@ import com.flex83.app.entities.ParentEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,7 +30,9 @@ public final class CommonUtils {
         }
     }
 
-
+    public static long getCurrentTimeInMillis() {
+        return Calendar.getInstance().getTimeInMillis();
+    }
 
 
 }

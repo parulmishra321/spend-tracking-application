@@ -1,5 +1,6 @@
 package com.flex83.app.utils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,6 +12,12 @@ public final class ValidationUtils {
 
     public static boolean nonNullOrEmpty(Map map) {
         return !isNullOrEmpty(map);
+    }
+
+    public static boolean isNullOrEmpty(List list) { return Objects.isNull(list) || list.isEmpty(); }
+
+    public static boolean nonNullOrEmpty(List list) {
+        return !isNullOrEmpty(list);
     }
 
     public static boolean isNullOrEmpty(String string) {
