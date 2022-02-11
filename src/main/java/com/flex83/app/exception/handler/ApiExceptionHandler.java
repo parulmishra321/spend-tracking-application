@@ -3,17 +3,22 @@ package com.flex83.app.exception.handler;
 import com.flex83.app.enums.ApiResponseCode;
 import com.flex83.app.exception.ApiException;
 import com.flex83.app.exception.ValidationException;
+import com.flex83.app.locale.MessageByLocale;
 import com.flex83.app.response.generic.ResponseDTO;
+import com.flex83.app.response.generic.ValidationErrorResponse;
 import com.flex83.app.response.utils.ResponseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -21,6 +26,9 @@ public class ApiExceptionHandler {
 
     @Autowired
     private ResponseUtil responseUtil;
+
+    @Autowired
+    private MessageByLocale messageByLocale;
 
     @ResponseStatus(value = HttpStatus.OK)
     @ExceptionHandler(value = {ApiException.class})
@@ -34,6 +42,16 @@ public class ApiExceptionHandler {
     public ResponseDTO<?> handleGenericException(ValidationException e) {
         LOG.error(String.format("Validation Exception: Got [[%s]] exception with message: %s", e.getClass().getName(), e.getMessage()));
         return responseUtil.exception(e.getCode(), e.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseDTO exception(MethodArgumentNotValidException e, HttpServletRequest httpServletRequest) throws Exception {
+        ValidationErrorResponse errorResponse = new ValidationErrorResponse();
+        LOG.error("Invalid / Missing Parameters " + errorResponse);
+        LOG.error(String.format("########### Got [[%s]] exception with message: %s at path =>  [[%s]]  ########  ########", e.getClass().getName(), e.getMessage(), e.getStackTrace()[0].toString()));
+        e.getBindingResult().getFieldErrors().forEach(field -> errorResponse.addErrorMessage(messageByLocale.getMessage(field.getDefaultMessage())));
+        return responseUtil.validationFailed(HttpStatus.BAD_REQUEST.value(), errorResponse);
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
