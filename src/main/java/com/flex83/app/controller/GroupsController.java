@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.flex83.app.constant.ApplicationConstants.X_TENANT_NAME;
 
 @Api(value = "(V1) Groups Controller", tags = {"Flex83 - (V1) Groups Controller"})
@@ -28,7 +30,7 @@ public class GroupsController {
 
     @ApiOperation(value = "Create Groups")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "C reated", response = ApiResponseDTO.class),
+            @ApiResponse(code = 201, message = "Created", response = ApiResponseDTO.class),
             @ApiResponse(code = 400, message = "Bad Request", response = BadRequestResponseDTO.class),
             @ApiResponse(code = 401, message = "You are Not Authenticated", response = NotAuthenticatedResponseDTO.class),
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
@@ -36,7 +38,7 @@ public class GroupsController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody GroupCreateRequest groupCreateRequest) throws Exception {
+    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody @Valid GroupCreateRequest groupCreateRequest) throws Exception {
         groupsService.createGroups(groupCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
