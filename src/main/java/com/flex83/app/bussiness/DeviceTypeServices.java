@@ -6,6 +6,7 @@ import com.flex83.app.response.DeviceDetails;
 import com.flex83.app.services.MongoDBService;
 import com.flex83.app.utils.CommonUtils;
 import com.flex83.app.utils.GenerateUtils;
+import com.flex83.app.utils.ValidationUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,18 +94,16 @@ public class DeviceTypeServices {
         }
         Document updateDeviceType = new Document();
         if (!getDeviceType.getString("name").equals(deviceTypeCreateRequest.getName())) {
+            Document params = new Document();
+            params.put("name", deviceTypeCreateRequest.getName());
+            Document deviceDetail = mongoDBService.findOne(Device_Collection,params,projection);
+            if (ValidationUtils.nonNullOrEmpty(deviceDetail)) {
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "device type exists with this name");
+            }
             updateDeviceType.put("name", deviceTypeCreateRequest.getName());
         }
-        if (!deviceTypeCreateRequest.getDescription().isEmpty()) {
-            updateDeviceType.put("description", deviceTypeCreateRequest.getDescription());
-        } else {
-            updateDeviceType.put("description", getDeviceType.getString("description"));
-        }
-        if (!deviceTypeCreateRequest.getReportInterval().isEmpty()) {
-            updateDeviceType.put("reportInterval", deviceTypeCreateRequest.getReportInterval());
-        } else {
-            updateDeviceType.put("reportInterval", getDeviceType.getString("reportInterval"));
-        }
+        updateDeviceType.put("description", ValidationUtils.nonNullOrEmpty(deviceTypeCreateRequest.getDescription())? deviceTypeCreateRequest.getDescription():getDeviceType.getString("description"));
+        updateDeviceType.put("reportInterval", ValidationUtils.nonNullOrEmpty(deviceTypeCreateRequest.getReportInterval())? deviceTypeCreateRequest.getReportInterval():getDeviceType.getString("reportInterval"));
         mongoDBService.update(Device_Collection, query, updateDeviceType);
     }
 }

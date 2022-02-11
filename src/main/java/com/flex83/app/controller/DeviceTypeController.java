@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.flex83.app.constant.ApplicationConstants.X_TENANT_NAME;
 
 @Api(value = "(V1) Device Type Controller", tags = {"Flex83 - (V1) Device Type Controller"})
@@ -35,7 +37,7 @@ public class DeviceTypeController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<?> createDeviceType(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant,@ApiParam(value = "deviceTypeCreateRequest", required = true) @RequestBody DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
+    public ResponseDTO<?> createDeviceType(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "deviceTypeCreateRequest", required = true) @RequestBody @Valid DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
         deviceTypeServices.createDeviceType(deviceTypeCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
@@ -75,8 +77,8 @@ public class DeviceTypeController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
     @PutMapping("/{id}")
-    public ResponseDTO<?> updateDeviceTypeById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "device type id", required = true) @PathVariable(name = "id") String id,@RequestBody DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
-        deviceTypeServices.updateDeviceTypeById(id ,deviceTypeCreateRequest);
+    public ResponseDTO<?> updateDeviceTypeById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "device type id", required = true) @PathVariable(name = "id") String id, @RequestBody @Valid DeviceTypeCreateRequest deviceTypeCreateRequest) throws Exception {
+        deviceTypeServices.updateDeviceTypeById(id, deviceTypeCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
 
