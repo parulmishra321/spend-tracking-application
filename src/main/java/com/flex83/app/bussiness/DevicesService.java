@@ -25,6 +25,28 @@ public class DevicesService {
     private GenerateUtils generateUtils;
 
     public void createDevices(DeviceCreateRequest deviceCreateRequest) {
+        Document deviceTypeQuery = new Document();
+        deviceTypeQuery.put("id", deviceCreateRequest.getDeviceTypeId());
+
+        Document projection = new Document();
+        projection.put(_ID, 0);
+
+        if(ValidationUtils.isNullOrEmpty(mongoDBService.findOne(DEVICE_TYPE_COLLECTION, deviceTypeQuery, projection))){
+            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "DeviceTypeID doest not exists");
+        }
+        Document groupQuery = new Document();
+        groupQuery.put("id", deviceCreateRequest.getGroupId());
+
+        if(ValidationUtils.isNullOrEmpty(mongoDBService.findOne(GROUPS_COLLECTION, groupQuery, projection))){
+            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Group ID does not exists");
+        }
+        Document query = new Document();
+        query.put("name", deviceCreateRequest.getName());
+
+        Document result = mongoDBService.findOne(DEVICES_COLLECTION, query, projection);
+        if (Objects.nonNull(result) && !result.isEmpty()) {
+            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device name already exists" + deviceCreateRequest.getName());
+        }
         Document deviceDetails = new Document();
         deviceDetails.put("id", CommonUtils.generateUUID());
         deviceDetails.put("name", deviceCreateRequest.getName());
@@ -32,18 +54,6 @@ public class DevicesService {
         deviceDetails.put("timestamp", CommonUtils.getCurrentTimeInMillis());
         deviceDetails.put("deviceTypeId", deviceCreateRequest.getDeviceTypeId());
         deviceDetails.put("groupId", deviceCreateRequest.getGroupId());
-        Document projection = new Document();
-        projection.put(_ID, 0);
-        Document result = mongoDBService.findOne(GROUPS_COLLECTION, deviceDetails, projection);
-        if (Objects.nonNull(result) && !result.isEmpty()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device details already exists with this name" + deviceCreateRequest.getName());
-        }
-        if(Objects.nonNull(result) && !result.isEmpty()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device details already exists with this device type id" + deviceCreateRequest.getDeviceTypeId());
-        }
-        if (Objects.nonNull(result) && !result.isEmpty()) {
-            throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device details already exists with this name" + deviceCreateRequest.getGroupId());
-        }
         mongoDBService.create(DEVICES_COLLECTION, deviceDetails);
     }
 
@@ -105,29 +115,30 @@ public class DevicesService {
         if (Objects.isNull(result) || result.isEmpty()) {
             throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device details does not exists");
         }
+
         Document set = new Document();
         if (!result.getString("name").equalsIgnoreCase(deviceCreateRequest.getName())) {
-            Document matchEq = new Document();
-            matchEq.put("name", deviceCreateRequest.getName());
-            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, matchEq, projection);
+            Document deviceName = new Document();
+            deviceName.put("name", deviceCreateRequest.getName());
+            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, deviceName, projection);
             if (ValidationUtils.nonNullOrEmpty(deviceInfo)) {
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device already exists with this name");
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device name already exists");
             }
             set.put("name",deviceCreateRequest.getName());
         }
         if (!result.getString("deviceTypeId").equalsIgnoreCase(deviceCreateRequest.getDeviceTypeId())) {
-            Document matchEq = new Document();
-            matchEq.put("deviceTypeId", deviceCreateRequest.getDeviceTypeId());
-            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, matchEq, projection);
+            Document queryDeviceTypeId = new Document();
+            queryDeviceTypeId.put("deviceTypeId", deviceCreateRequest.getDeviceTypeId());
+            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, queryDeviceTypeId, projection);
             if (ValidationUtils.nonNullOrEmpty(deviceInfo)) {
                 throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device already exists with this Device Type ID");
             }
             set.put("deviceTypeId",deviceCreateRequest.getDeviceTypeId());
         }
         if (!result.getString("groupId").equalsIgnoreCase(deviceCreateRequest.getGroupId())) {
-            Document matchEq = new Document();
-            matchEq.put("groupId", deviceCreateRequest.getGroupId());
-            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, matchEq, projection);
+            Document queryGroupId = new Document();
+            queryGroupId.put("groupId", deviceCreateRequest.getGroupId());
+            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, queryGroupId, projection);
             if (ValidationUtils.nonNullOrEmpty(deviceInfo)) {
                 throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device already exists with this Group Type ID");
             }
