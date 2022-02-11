@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.flex83.app.constant.ApplicationConstants.X_TENANT_NAME;
 
 @Api(value = "(V1) Groups Controller", tags = {"Flex83 - (V1) Groups Controller"})
@@ -36,7 +38,7 @@ public class GroupsController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody GroupCreateRequest groupCreateRequest) throws Exception {
+    public ResponseDTO<?> createGroups(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @ApiParam(value = "groupCreateRequest", required = true) @RequestBody @Valid GroupCreateRequest groupCreateRequest) throws Exception {
         groupsService.createGroups(groupCreateRequest);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
