@@ -5,8 +5,6 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class DeviceTypeCreateRequest {
-    @NotBlank(message = "pattern.ConnectorReq.name")
-    @Pattern(regexp="^[a-zA-Z0-9]([\\w]*[a-zA-Z0-9]?$)",message="pattern.ConnectorReq.name")
     private String name;
     private String description;
     private String reportInterval;
