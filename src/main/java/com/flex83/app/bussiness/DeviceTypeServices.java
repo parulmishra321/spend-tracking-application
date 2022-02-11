@@ -2,7 +2,7 @@ package com.flex83.app.bussiness;
 
 import com.flex83.app.exception.ValidationException;
 import com.flex83.app.request.DeviceTypeCreateRequest;
-import com.flex83.app.response.DeviceDetails;
+import com.flex83.app.response.DeviceTypeDetails;
 import com.flex83.app.services.MongoDBService;
 import com.flex83.app.utils.CommonUtils;
 import com.flex83.app.utils.GenerateUtils;
@@ -42,24 +42,24 @@ public class DeviceTypeServices {
 
     }
 
-    public List<DeviceDetails> getAllDeviceType() {
-        List<DeviceDetails> result = new ArrayList<>();
+    public List<DeviceTypeDetails> getAllDeviceType() {
+        List<DeviceTypeDetails> result = new ArrayList<>();
         Document query = new Document();
         Document projection = new Document();
         projection.put(_ID, 0);
         List<Document> data = mongoDBService.findList(Device_Collection, query, projection);
         data.forEach(ele -> {
-            DeviceDetails deviceDetails = new DeviceDetails();
-            deviceDetails.setId(ele.getString("id"));
-            deviceDetails.setName(ele.getString("name"));
-            deviceDetails.setDescription(ele.getString("description"));
-            deviceDetails.setReportInterval(ele.getString("reportInterval"));
-            result.add(deviceDetails);
+            DeviceTypeDetails deviceTypeDetails = new DeviceTypeDetails();
+            deviceTypeDetails.setId(ele.getString("id"));
+            deviceTypeDetails.setName(ele.getString("name"));
+            deviceTypeDetails.setDescription(ele.getString("description"));
+            deviceTypeDetails.setReportInterval(ele.getString("reportInterval"));
+            result.add(deviceTypeDetails);
         });
         return result;
     }
 
-    public DeviceDetails getDeviceTypeById(String deviceId) {
+    public DeviceTypeDetails getDeviceTypeById(String deviceId) {
         Document query = new Document();
         query.put("id", deviceId);
         Document projection = new Document();
@@ -68,12 +68,12 @@ public class DeviceTypeServices {
         if (Objects.isNull(getDeviceType) || getDeviceType.isEmpty()) {
             throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "device type doesn't exist");
         }
-        DeviceDetails deviceDetails = new DeviceDetails();
-        deviceDetails.setId(getDeviceType.getString("id"));
-        deviceDetails.setName(getDeviceType.getString("name"));
-        deviceDetails.setDescription(getDeviceType.getString("description"));
-        deviceDetails.setReportInterval(getDeviceType.getString("reportInterval"));
-        return deviceDetails;
+        DeviceTypeDetails deviceTypeDetails = new DeviceTypeDetails();
+        deviceTypeDetails.setId(getDeviceType.getString("id"));
+        deviceTypeDetails.setName(getDeviceType.getString("name"));
+        deviceTypeDetails.setDescription(getDeviceType.getString("description"));
+        deviceTypeDetails.setReportInterval(getDeviceType.getString("reportInterval"));
+        return deviceTypeDetails;
     }
 
     public void deleteDeviceTypeById(String deviceId) {
