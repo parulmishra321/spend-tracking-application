@@ -6,4 +6,5 @@ public final class MongoDBConstants {
     public static final String _ID = "_id";
     public static final String GROUPS_COLLECTION = "systemGroupDetails";
     public static final String ID = "id";
+    public static final String Device_Collection = "DeviceDetails";
 }
