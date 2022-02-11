@@ -129,18 +129,18 @@ public class DevicesService {
         if (!result.getString("deviceTypeId").equalsIgnoreCase(deviceCreateRequest.getDeviceTypeId())) {
             Document queryDeviceTypeId = new Document();
             queryDeviceTypeId.put("deviceTypeId", deviceCreateRequest.getDeviceTypeId());
-            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, queryDeviceTypeId, projection);
-            if (ValidationUtils.nonNullOrEmpty(deviceInfo)) {
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device already exists with this Device Type ID");
+            Document deviceInfo = mongoDBService.findOne(DEVICE_TYPE_COLLECTION, queryDeviceTypeId, projection);
+            if (ValidationUtils.isNullOrEmpty(deviceInfo)) {
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device does not exists with this Device Type ID");
             }
             set.put("deviceTypeId",deviceCreateRequest.getDeviceTypeId());
         }
         if (!result.getString("groupId").equalsIgnoreCase(deviceCreateRequest.getGroupId())) {
             Document queryGroupId = new Document();
             queryGroupId.put("groupId", deviceCreateRequest.getGroupId());
-            Document deviceInfo = mongoDBService.findOne(DEVICES_COLLECTION, queryGroupId, projection);
-            if (ValidationUtils.nonNullOrEmpty(deviceInfo)) {
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device already exists with this Group Type ID");
+            Document deviceInfo = mongoDBService.findOne(GROUPS_COLLECTION, queryGroupId, projection);
+            if (ValidationUtils.isNullOrEmpty(deviceInfo)) {
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device does not exists with this Group ID");
             }
             set.put("groupId",deviceCreateRequest.getGroupId());
         }
