@@ -34,7 +34,6 @@ public class DevicesController {
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO<?> createDevices(@ApiParam(value =X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @RequestBody DeviceCreateRequest deviceCreateRequest) throws Exception {
@@ -50,7 +49,6 @@ public class DevicesController {
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
-
     @PostMapping(value = "/filter")
     public ResponseDTO<?> getAllDevices(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant, @RequestBody DeviceFilter deviceFilter) throws Exception {
         return responseUtil.ok(devicesService.getAllDevices(deviceFilter), ApiResponseCode.SUCCESS);
@@ -63,7 +61,6 @@ public class DevicesController {
             @ApiResponse(code = 403, message = "Not Authorized on this resource", response = AccessDeniedResponseDTO.class),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
     })
-
     @GetMapping("/{id}")
     public ResponseDTO<?> getById(@ApiParam(value = X_TENANT_NAME, required = true) @RequestHeader(name = X_TENANT_NAME) String tenant ,@ApiParam(value = "Enter Device ID", required = true) @PathVariable("id") String id) throws Exception {
         return responseUtil.ok(devicesService.getById(id), ApiResponseCode.SUCCESS);
@@ -96,5 +93,4 @@ public class DevicesController {
         devicesService.updateById(deviceCreateRequest, id);
         return responseUtil.ok(ApiResponseCode.SUCCESS);
     }
-
 }

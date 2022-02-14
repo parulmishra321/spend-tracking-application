@@ -131,7 +131,7 @@ public class DevicesService {
             queryDeviceTypeId.put("deviceTypeId", deviceCreateRequest.getDeviceTypeId());
             Document deviceInfo = mongoDBService.findOne(DEVICE_TYPE_COLLECTION, queryDeviceTypeId, projection);
             if (ValidationUtils.isNullOrEmpty(deviceInfo)) {
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device does not exists with this Device Type ID");
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device Type does not exists");
             }
             set.put("deviceTypeId",deviceCreateRequest.getDeviceTypeId());
         }
@@ -140,7 +140,7 @@ public class DevicesService {
             queryGroupId.put("groupId", deviceCreateRequest.getGroupId());
             Document deviceInfo = mongoDBService.findOne(GROUPS_COLLECTION, queryGroupId, projection);
             if (ValidationUtils.isNullOrEmpty(deviceInfo)) {
-                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Device does not exists with this Group ID");
+                throw new ValidationException(HttpStatus.BAD_REQUEST.value(), "Group does not exists");
             }
             set.put("groupId",deviceCreateRequest.getGroupId());
         }
