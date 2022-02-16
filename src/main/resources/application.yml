@@ -1,13 +1,13 @@
 server:
-  port: 9092
+  port: 8080
 spring:
-  application: { name: 'flex83-devices-be' }
+  application: { name: 'spend-tracker-application' }
 
 hibernate:
   connection :
-    url:  jdbc:mysql://localhost:3306/flex83_devices?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url:  jdbc:mysql://localhost:3306/spend_tracker_app?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
-    password: Ayuagr01
+    password: password
     driver_class: com.mysql.jdbc.Driver
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   mt_url: jdbc:mysql://localhost:3306/__DATABASE__?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false";
